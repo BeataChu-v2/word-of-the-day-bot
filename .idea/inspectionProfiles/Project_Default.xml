@@ -1,0 +1,48 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="SqlNoDataSourceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+          <option value="word-of-the-day-bot" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="com.fasterxml.jackson.core:jackson-databind:2.20.1" />
+          <option value="org.springframework.boot:spring-boot:4.0.1" />
+          <option value="com.fasterxml.jackson.core:jackson-core:2.20.1" />
+          <option value="org.assertj:assertj-core:3.27.6" />
+          <option value="tools.jackson.core:jackson-databind:3.0.3" />
+          <option value="org.springframework:spring-core:7.0.2" />
+          <option value="org.springframework:spring-beans:7.0.2" />
+          <option value="tools.jackson.core:jackson-core:3.0.3" />
+          <option value="net.minidev:json-smart:2.6.0" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

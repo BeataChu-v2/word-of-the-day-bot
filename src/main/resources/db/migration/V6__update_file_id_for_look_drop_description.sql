@@ -1,0 +1,11 @@
+ALTER TABLE images
+    DROP COLUMN description;
+
+UPDATE images
+SET file_id = 'AgACAgIAAxkBAAM5auuBrBEzpKPhSIpxWm7acBnQLRgAAoQkaxv1c1lL8QwJx7NyB2MBAAMCAAN4AAM9BA'
+WHERE id = 1;
+
+UPDATE images
+SET file_id = 'AgACAgIAAxkBAAM0aut8W908CdCv5yBmejg99UkAAdpcAAKHIWsbcQFYSw4dVIL0H7oKAQADAgADeAADPQQ'
+WHERE id = 2;
+

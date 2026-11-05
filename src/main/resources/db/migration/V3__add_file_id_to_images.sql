@@ -1,0 +1,13 @@
+ALTER TABLE images
+    ADD COLUMN file_id TEXT;
+
+UPDATE images
+SET file_id = CASE
+    WHEN id = 1 THEN 'AgACAgIAAxkBAAM0aut8W908CdCv5yBmejg99UkAAdpcAAKHIWsbcQFYSw4dVIL0H7oKAQADAgADeAADPQQ'
+END;
+
+ALTER TABLE images
+ALTER COLUMN file_id SET NOT NULL;
+
+ALTER TABLE images
+DROP COLUMN image_url;
