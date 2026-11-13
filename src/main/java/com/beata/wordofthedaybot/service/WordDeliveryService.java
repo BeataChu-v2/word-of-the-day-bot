@@ -3,6 +3,7 @@ package com.beata.wordofthedaybot.service;
 import com.beata.wordofthedaybot.dto.WordContent;
 import com.beata.wordofthedaybot.entity.Image;
 import com.beata.wordofthedaybot.entity.Word;
+import com.beata.wordofthedaybot.exception.MessageLengthExceededException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,25 @@ public class WordDeliveryService {
     }
 
     public boolean sendWord(Long chatId, WordContent content) {
-        if (!content.images().isEmpty()) {
-            Image image = content.images().getFirst();
-            if (!sendPhoto(chatId, content.word().getWord(), image)) {
-                return false;
-            }
+        String text = formatWordMessage(content);
+
+        // if there is no photo, just send plain text
+        if (content.images() == null || content.images().isEmpty()) {
+            log.warn("No image found for word {}", content.word().getWord());
+            return sendText(chatId, text);
         }
 
-        String message = formatWordMessage(content);
-        return sendText(chatId, message);
+        //if there is a photo, send the word in one or two messages
+        if (text.length() < 1024) {
+            return sendPhoto(chatId, text, content.images().getFirst());
+        } else if (text.length() < 4096) {
+            sendPhoto(chatId, content.word().getWord(), content.images().getFirst());
+            return sendText(chatId, text);
+        } else {
+            log.warn("Message length exceeded for word {}", content.word().getWord());
+            throw new MessageLengthExceededException();
+        }
     }
-
 
     private String formatWordMessage(WordContent content) {
         StringBuilder text = new StringBuilder();
@@ -89,11 +98,11 @@ public class WordDeliveryService {
         }
     }
 
-    private boolean sendPhoto(Long chatId, String word, Image image) {
+    private boolean sendPhoto(Long chatId, String caption, Image image) {
         SendPhoto response = SendPhoto.builder()
                 .chatId(chatId)
                 .photo(new InputFile(image.getFileId()))
-                .caption(word)
+                .caption(caption)
                 .build();
         try {
             telegramClient.execute(response);
@@ -116,7 +125,7 @@ public class WordDeliveryService {
         try {
             telegramClient.execute(response);
         } catch (TelegramApiException e) {
-            log.error("Failed to send Telegram notification to chat {}", chatId, e);
+            log.warn("Failed to send Telegram notification to chat {}", chatId, e);
         }
     }
 }

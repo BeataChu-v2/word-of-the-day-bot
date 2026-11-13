@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Long tgUserId) {
         User user = userRepository.findByTgUserId(tgUserId)
-                .orElseThrow(UserNotRegisteredException::new);
+                .orElseThrow(() -> new UserNotRegisteredException(tgUserId));
 
         userProgressRepository.deleteById(user.getId());
         userRepository.delete(user);
@@ -63,7 +63,7 @@ public class UserService {
 
     public void resetUserProgress(Long tgUserId) {
         User user = userRepository.findByTgUserId(tgUserId)
-                .orElseThrow(UserNotRegisteredException::new);
+                .orElseThrow(() -> new UserNotRegisteredException(tgUserId));
 
         UserProgress progress = userProgressRepository.findById(user.getId())
                 .orElseThrow(() -> new IllegalStateException("User progress not found"));

@@ -32,6 +32,9 @@ public class UserProgress {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_quiz_sequence_number", nullable = false)
+    private Integer lastQuizSequenceNumber = 0;
+
     public UserProgress(User user) {
         this.user = Objects.requireNonNull(user);
         this.lastSequenceNumber = 0;
@@ -46,6 +49,21 @@ public class UserProgress {
 
         this.lastSequenceNumber = sequenceNumber;
         this.lastSentAt = LocalDateTime.now();
+    }
+
+    public void markQuizSent(Integer lastSequenceNumber) {
+        if (lastSequenceNumber == null || lastSequenceNumber < 1
+                || lastSequenceNumber % 6 != 0) {
+            throw new IllegalArgumentException(
+                    "Last sequence number must be positive and divide by 6"
+            );
+        }
+
+        if (lastQuizSequenceNumber >= lastSequenceNumber) {
+            throw new IllegalStateException("Quiz already sent");
+        };
+
+        this.lastQuizSequenceNumber = lastSequenceNumber;
     }
 
     public void resetProgress() {

@@ -22,10 +22,10 @@ public class WordMessageService {
     @Transactional(readOnly = true)
     public WordContent getNextWord(Long tgUserId) {
         User user = userRepository.findByTgUserId(tgUserId)
-                .orElseThrow(UserNotRegisteredException :: new);
+                .orElseThrow(() -> new UserNotRegisteredException(tgUserId));
 
         UserProgress progress = userProgressRepository.findById(user.getId())
-                .orElseThrow(UserNotRegisteredException::new);
+                .orElseThrow(() -> new UserNotRegisteredException(tgUserId));
 
         Integer nextSequenceNumber = progress.getLastSequenceNumber() + 1;
 
@@ -36,7 +36,7 @@ public class WordMessageService {
     @Transactional
     public void markWordAsSent(Long tgUserId, Integer sequenceNumber) {
         User user = userRepository.findByTgUserId(tgUserId)
-                .orElseThrow(UserNotRegisteredException::new);
+                .orElseThrow(() -> new UserNotRegisteredException(tgUserId));
 
         UserProgress progress = userProgressRepository.findById(user.getId())
                 .orElseThrow(() ->
