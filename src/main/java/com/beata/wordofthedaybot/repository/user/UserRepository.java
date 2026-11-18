@@ -1,6 +1,6 @@
-package com.beata.wordofthedaybot.repository;
+package com.beata.wordofthedaybot.repository.user;
 
-import com.beata.wordofthedaybot.entity.User;
+import com.beata.wordofthedaybot.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.beata.wordofthedaybot.entity;
+package com.beata.wordofthedaybot.entity.quiz;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,4 +28,7 @@ public class Quiz {
     @Column(name = "created_at", nullable = false,
             insertable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "image_file_id")
+    private String imageFileId;
 }

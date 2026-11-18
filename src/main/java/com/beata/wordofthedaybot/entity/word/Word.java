@@ -1,4 +1,4 @@
-package com.beata.wordofthedaybot.entity;
+package com.beata.wordofthedaybot.entity.word;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,9 +38,13 @@ public class Word {
     )
     private LocalDateTime createdAt;
 
-    public Word(Integer sequenceNumber, String word, String translation) {
+    @Column(name = "image_file_id")
+    private String imageFileId;
+
+    public Word(Integer sequenceNumber, String word, String translation, String imageFileId) {
         this.sequenceNumber = sequenceNumber;
         this.word = word;
         this.translation = translation;
+        this.imageFileId = imageFileId;
     }
 }

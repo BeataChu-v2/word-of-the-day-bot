@@ -1,18 +1,23 @@
-package com.beata.wordofthedaybot.service;
+package com.beata.wordofthedaybot.service.quiz;
 
 import com.beata.wordofthedaybot.dto.QuizContent;
-import com.beata.wordofthedaybot.entity.Quiz;
-import com.beata.wordofthedaybot.entity.QuizExercise;
-import com.beata.wordofthedaybot.entity.User;
-import com.beata.wordofthedaybot.entity.UserProgress;
+import com.beata.wordofthedaybot.entity.quiz.Quiz;
+import com.beata.wordofthedaybot.entity.quiz.QuizExercise;
+import com.beata.wordofthedaybot.entity.user.User;
+import com.beata.wordofthedaybot.entity.user.UserProgress;
 import com.beata.wordofthedaybot.exception.QuizNotFoundException;
 import com.beata.wordofthedaybot.exception.UserNotRegisteredException;
 import com.beata.wordofthedaybot.exception.UserProgressNotFound;
-import com.beata.wordofthedaybot.repository.*;
+import com.beata.wordofthedaybot.repository.quiz.QuizExerciseRepository;
+import com.beata.wordofthedaybot.repository.quiz.QuizRepository;
+import com.beata.wordofthedaybot.repository.user.UserProgressRepository;
+import com.beata.wordofthedaybot.repository.user.UserRepository;
+import com.beata.wordofthedaybot.service.word.WordContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +27,7 @@ public class QuizMessageService {
     private final QuizRepository quizRepository;
     private final UserProgressRepository userProgressRepository;
     private final QuizExerciseRepository quizExerciseRepository;
+    private final WordContentService wordContentService;
 
     @Transactional(readOnly = true)
     public boolean isQuizDue(Long tgUserId) {
@@ -49,9 +55,16 @@ public class QuizMessageService {
                 quizExerciseRepository
                         .findAllByQuiz_IdOrderBySortOrderAsc(quiz.getId());
 
-        return new QuizContent(quiz, exercises);
+        List<String> coveredWords = new ArrayList<>();
+
+        for (int i = fromSequenceNumber; i <= toSequenceNumber; i++) {
+            coveredWords.add(wordContentService.getWordBySequenceNumber(i));
+        }
+
+        return new QuizContent(quiz, exercises, coveredWords);
     }
 
+    @Transactional
     public void markQuizSent(Long tgUserId) {
         UserProgress progress = getUserProgress(tgUserId);
         progress.markQuizSent(progress.getLastSequenceNumber());

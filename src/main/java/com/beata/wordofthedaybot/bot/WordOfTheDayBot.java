@@ -1,12 +1,7 @@
 package com.beata.wordofthedaybot.bot;
 
-import com.beata.wordofthedaybot.dto.WordContent;
-import com.beata.wordofthedaybot.entity.User;
-import com.beata.wordofthedaybot.exception.NoMoreWordsException;
-import com.beata.wordofthedaybot.exception.UserNotRegisteredException;
-import com.beata.wordofthedaybot.service.UserService;
-import com.beata.wordofthedaybot.service.WordDeliveryService;
-import com.beata.wordofthedaybot.service.WordMessageService;
+import com.beata.wordofthedaybot.service.DeliveryService;
+import com.beata.wordofthedaybot.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,25 +20,24 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
     private static final Logger log =
             LoggerFactory.getLogger(WordOfTheDayBot.class);
 
-    private final WordDeliveryService wordDeliveryService;
+    private final DeliveryService deliveryService;
     private final UserService userService;
-    private final WordMessageService wordMessageService;
     @Value("${telegram.bot.admin-id}")
     private Long adminId;
 
     public WordOfTheDayBot(
             UserService userService,
-            WordMessageService wordMessageService,
-            WordDeliveryService wordDeliveryService,
-            @Value("${telegram.bot.token}") String botToken) {
+            DeliveryService deliveryService) {
 
         this.userService = userService;
-        this.wordMessageService = wordMessageService;
-        this.wordDeliveryService = new WordDeliveryService(botToken);
+        this.deliveryService = deliveryService;
     }
 
     @Override
     public void consume(Update update) {
+        if (update.hasCallbackQuery()) {
+            return;
+        }
 
         if (!update.hasMessage()) {
             return;
@@ -70,7 +64,7 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
         } catch (Exception e) {
             log.error("Unexpected error while processing Telegram update", e);
 
-            wordDeliveryService.sendNotification(
+            deliveryService.sendNotification(
                     update.getMessage().getChatId(),
                     "Что-то пошло не так. Попробуйте еще раз"
             );
@@ -82,9 +76,9 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
         Long chatId = message.getChatId();
 
         if (!tgUserId.equals(adminId)) {
-            wordDeliveryService.sendNotification(
+            deliveryService.sendNotification(
                     chatId,
-                    "This feature is available only for the bot admin."
+                    "Эта команда доступна только для админа."
             );
             return;
         }
@@ -95,7 +89,7 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
             .map(PhotoSize::getFileId)
             .orElseThrow();
 
-        wordDeliveryService.sendNotification(chatId,
+        deliveryService.sendNotification(chatId,
                 "Telegram file_id:\n" + fileId);
     }
 
@@ -108,36 +102,13 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
                 telegramUser.getFirstName()
         );
 
-       wordDeliveryService.sendNotification(message.getChatId(),
+       deliveryService.sendNotification(message.getChatId(),
                "Ежедневная рассылка слов включена!");
     }
 
     private void handleNextCommand(Message message) {
-
         Long tgUserId = message.getFrom().getId();
-        Long chatId = message.getChatId();
-
-        try {
-            WordContent content = wordMessageService.getNextWord(tgUserId);
-
-            boolean sent = wordDeliveryService.sendWord(chatId, content);
-            if (!sent) return;
-
-            wordMessageService.markWordAsSent(
-                    tgUserId,
-                    content.word().getSequenceNumber()
-            );
-        } catch (UserNotRegisteredException e) {
-            wordDeliveryService.sendNotification(
-                    message.getChatId(),
-                    "Вы не зарегистрированы. Для регистрации отправьте команду /start "
-            );
-        } catch (NoMoreWordsException e) {
-            wordDeliveryService.sendNotification(
-                    message.getChatId(),
-                    "Вы достигли конца списка. Новые слова появятся совсем скоро!"
-            );
-        }
+        deliveryService.sendNextDelivery(tgUserId);
     }
 
     private void handleStopCommand(Message message) {
@@ -146,12 +117,12 @@ public class WordOfTheDayBot implements LongPollingSingleThreadUpdateConsumer {
 
         boolean deactivated = userService.deactivateUser(tgUserId);
         if(deactivated) {
-            wordDeliveryService.sendNotification(
+            deliveryService.sendNotification(
                     chatId,
                     "Ежедневная рассылка слов отключена. Ее можно возобновить с помощью команды /start"
             );
         } else {
-            wordDeliveryService.sendNotification(
+            deliveryService.sendNotification(
                     chatId,
                     "Вы не зарегистрированы. Для регистрации отправьте команду /start"
             );

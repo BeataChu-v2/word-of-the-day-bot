@@ -1,6 +1,6 @@
-package com.beata.wordofthedaybot.repository;
+package com.beata.wordofthedaybot.repository.word;
 
-import com.beata.wordofthedaybot.entity.Collocation;
+import com.beata.wordofthedaybot.entity.word.Collocation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

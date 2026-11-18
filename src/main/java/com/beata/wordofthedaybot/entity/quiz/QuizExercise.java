@@ -1,4 +1,4 @@
-package com.beata.wordofthedaybot.entity;
+package com.beata.wordofthedaybot.entity.quiz;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

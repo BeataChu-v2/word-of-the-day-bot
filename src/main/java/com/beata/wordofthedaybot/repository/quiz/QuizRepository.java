@@ -1,6 +1,6 @@
-package com.beata.wordofthedaybot.repository;
+package com.beata.wordofthedaybot.repository.quiz;
 
-import com.beata.wordofthedaybot.entity.Quiz;
+import com.beata.wordofthedaybot.entity.quiz.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

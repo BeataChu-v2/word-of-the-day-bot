@@ -1,12 +1,12 @@
-package com.beata.wordofthedaybot.service;
+package com.beata.wordofthedaybot.service.word;
 
 import com.beata.wordofthedaybot.dto.WordContent;
-import com.beata.wordofthedaybot.entity.User;
-import com.beata.wordofthedaybot.entity.UserProgress;
+import com.beata.wordofthedaybot.entity.user.User;
+import com.beata.wordofthedaybot.entity.user.UserProgress;
 import com.beata.wordofthedaybot.exception.NoMoreWordsException;
 import com.beata.wordofthedaybot.exception.UserNotRegisteredException;
-import com.beata.wordofthedaybot.repository.UserProgressRepository;
-import com.beata.wordofthedaybot.repository.UserRepository;
+import com.beata.wordofthedaybot.repository.user.UserProgressRepository;
+import com.beata.wordofthedaybot.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,4 +49,6 @@ public class WordMessageService {
        }
        progress.markWordSent(sequenceNumber);
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.beata.wordofthedaybot.entity;
+package com.beata.wordofthedaybot.entity.word;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "phrases")
+@Table(name = "collocations")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Phrase {
+public class Collocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,18 +22,18 @@ public class Phrase {
     private Word word;
 
     @Setter
-    @Column(name = "text", nullable = false, length = 500)
+    @Column(name = "text", nullable = false)
     private String text;
 
     @Setter
-    @Column(name = "translation", nullable = false, length = 500)
+    @Column(name = "translation", nullable = false)
     private String translation;
 
     @Setter
     @Column(name = "sort_order", nullable = false)
     private Integer sortOrder;
 
-    public Phrase(
+    public Collocation(
             Word word,
             String text,
             String translation,

@@ -1,15 +1,16 @@
 package com.beata.wordofthedaybot.service;
 
 import com.beata.wordofthedaybot.dto.QuizContent;
-import com.beata.wordofthedaybot.entity.Quiz;
-import com.beata.wordofthedaybot.entity.QuizExercise;
-import com.beata.wordofthedaybot.entity.User;
-import com.beata.wordofthedaybot.entity.UserProgress;
+import com.beata.wordofthedaybot.entity.quiz.Quiz;
+import com.beata.wordofthedaybot.entity.quiz.QuizExercise;
+import com.beata.wordofthedaybot.entity.user.User;
+import com.beata.wordofthedaybot.entity.user.UserProgress;
 import com.beata.wordofthedaybot.exception.QuizNotFoundException;
-import com.beata.wordofthedaybot.repository.QuizExerciseRepository;
-import com.beata.wordofthedaybot.repository.QuizRepository;
-import com.beata.wordofthedaybot.repository.UserProgressRepository;
-import com.beata.wordofthedaybot.repository.UserRepository;
+import com.beata.wordofthedaybot.repository.quiz.QuizExerciseRepository;
+import com.beata.wordofthedaybot.repository.quiz.QuizRepository;
+import com.beata.wordofthedaybot.repository.user.UserProgressRepository;
+import com.beata.wordofthedaybot.repository.user.UserRepository;
+import com.beata.wordofthedaybot.service.quiz.QuizMessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
